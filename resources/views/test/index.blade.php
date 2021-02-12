@@ -25,6 +25,13 @@
                 </ul>
             </div>
         @endif
+
+        {{-- @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+        @endif  --}}
+
         <table id="example1" class="table table-bordered table-striped">
             <thead>                  
                 <tr>
@@ -37,11 +44,14 @@
                     <th class="text-center" scope="col">
                         <span>Alamat</span>            
                     </th>
+                    <th class="text-center" scope="col">
+                        <span>Action</span>            
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($tests as $key => $test)
-                    <tr>
+                    <tr id="data-{{$test->id}}">
                         <td class="text-center">
                             <span>{{$key + 1}}</span>
                         </td>
@@ -50,6 +60,11 @@
                         </td>
                         <td class="text-center">
                             <span>{{$test->alamat}}</span>
+                        </td>
+                        <td class="text-center">
+                            <span>
+                                <button type="button" class="btn btn-danger delete" value="{{$test->id}}" onclick="hide('data-{{$test->id}}')">Delete</button>
+                            </span>
                         </td>
                     </tr>
                 @endforeach
@@ -128,7 +143,7 @@ $(document).ready(function() {
                     console.log(dataResult);
                     var dataResult = JSON.parse(dataResult);
                     if(dataResult.statusCode==200){
-                        window.location = "{{ route('test.create') }}";
+                        window.location = "{{ route('test.index') }}";
                         		
                     }
                     else if(dataResult.statusCode==201){
@@ -142,7 +157,37 @@ $(document).ready(function() {
             alert('Please fill all the field !');
         }
     });
+
+    $(document).on("click", ".delete", function() { 
+        var $ele = $(this).parent().parent();
+        var id= $(this).val();
+        var url = "{{URL('test/delete')}}";
+        var dltUrl = url+"/"+id;
+		$.ajax({
+			url: dltUrl,
+			type: "get",
+			cache: false,
+			data:{
+				_token:'{{ csrf_token() }}'
+			},
+			success: function(dataResult){
+				var dataResult = JSON.parse(dataResult);
+				if(dataResult.statusCode==200){
+					$ele.fadeOut().remove();
+				}
+			}
+		});
+	});
 });
+
+function hide(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 </script>
 </body>
 </html>

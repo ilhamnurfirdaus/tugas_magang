@@ -20,6 +20,7 @@ Route::prefix("test")->group(function() {
     Route::get('/', 'TestController@index')->name('test.view');
     Route::post('/store', 'TestController@store')->name('test.store');
     Route::get('/{id}', 'TestController@show')->name('test.show');
+    Route::get('/delete/{id}', 'TestController@destroy');
 });
 
 // Route::get('/view', function () {

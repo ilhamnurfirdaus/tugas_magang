@@ -28,7 +28,14 @@ class TestController extends Controller
         $tests = Test::all();
 
         return view('test.index', compact('tests'));
+        // return view('test.index');
     }
+
+    // public function getTestData(){
+    //     $tests = Test::all();
+    //     return json_encode(array('data'=>$tests));
+    // }
+
 
     /**
      * Store a newly created resource in storage.
@@ -119,6 +126,8 @@ class TestController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Test::find($id)->delete();
+        
+        return json_encode(array('statusCode'=>200));
     }
 }
